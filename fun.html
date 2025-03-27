@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>歡迎來到甜點世界</title>
+  <link rel="stylesheet" href="css/simple.css"> <!-- 引入 CSS 檔案 -->
+  <style>
+    .slot-machine {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+    .slot {
+      width: 100px;
+      height: 100px;
+      font-size: 50px;
+      border: 2px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f8f8;
+      margin: 10px;
+      overflow: hidden;
+    }
+    .slot span {
+      display: block;
+      transition: transform 1s ease-in-out;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      background: #ff66b2;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header>
+    <nav>
+      <a href="index.html">首頁</a>
+      <a href="about.html">關於</a>
+      <a href="blog/index.html">部落格</a>
+      <a href="resume.html">簡歷</a>
+      <a href="fun.html" aria-current="page">Fun!</a>
+    </nav>
+  </header>
+
+  <!-- Slot Machine Section -->
+  <h1 style="text-align: center;">🎰 甜點拉霸遊戲 🎰</h1>
+  <div class="slot-machine">
+    <div class="slot"><span id="slot1">🍩</span></div>
+    <div class="slot"><span id="slot2">🍪</span></div>
+    <div class="slot"><span id="slot3">🍰</span></div>
+  </div>
+  <div style="text-align: center;">
+    <button class="btn" onclick="spin()">拉霸！</button>
+    <h2 id="result"></h2>
+  </div>
+
+  <footer>
+    <p>感謝您參觀甜點世界，期待您的回來！</p>
+  </footer>
+
+  <script>
+    function spin() {
+      const items = ["🍩", "🍪", "🍰", "🍫", "🍦", "🧁"];
+      let slot1 = document.getElementById("slot1");
+      let slot2 = document.getElementById("slot2");
+      let slot3 = document.getElementById("slot3");
+      let result = document.getElementById("result");
+      
+      let random1 = items[Math.floor(Math.random() * items.length)];
+      let random2 = items[Math.floor(Math.random() * items.length)];
+      let random3 = items[Math.floor(Math.random() * items.length)];
+      
+      slot1.style.transform = "translateY(-100%)";
+      slot2.style.transform = "translateY(-100%)";
+      slot3.style.transform = "translateY(-100%)";
+      
+      setTimeout(() => {
+        slot1.textContent = random1;
+        slot2.textContent = random2;
+        slot3.textContent = random3;
+        
+        slot1.style.transform = "translateY(0)";
+        slot2.style.transform = "translateY(0)";
+        slot3.style.transform = "translateY(0)";
+        
+        if (random1 === random2 && random2 === random3) {
+          result.textContent = "🎉 恭喜中獎！🎉";
+        } else {
+          result.textContent = "再試一次！🍀";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+
+</html>
