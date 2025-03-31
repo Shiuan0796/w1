@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>歡迎來到甜點世界</title>
-  <link rel="stylesheet" href="css/simple.css">
+  <link rel="stylesheet" href="css/simple.css"> <!-- 保留你原本的外部 CSS -->
   <style>
     .slot-machine {
       display: flex;
@@ -25,10 +25,12 @@
       position: relative;
     }
     .slot span {
+      display: block;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      transition: transform 1s ease-in-out;
     }
     .spinning {
       animation: spin 0.1s linear infinite;
@@ -39,7 +41,6 @@
     }
     .stopped {
       animation: none;
-      transition: transform 0.3s ease-out;
     }
     .btn {
       padding: 10px 20px;
@@ -48,7 +49,6 @@
       background: #ff66b2;
       color: white;
       border: none;
-      border-radius: 5px;
     }
     .btn:disabled {
       background: #ccc;
@@ -101,12 +101,14 @@
         slot.classList.remove("stopped");
       });
 
-      // 隨機結果
+      // 隨機選擇第一個滾輪的結果
       const random1 = items[Math.floor(Math.random() * items.length)];
-      const random2 = items[Math.floor(Math.random() * items.length)];
-      const random3 = items[Math.floor(Math.random() * items.length)];
+      
+      // 第二個和第三個滾輪有 50% 機率跟隨第一個滾輪
+      const random2 = Math.random() < 0.5 ? random1 : items[Math.floor(Math.random() * items.length)];
+      const random3 = Math.random() < 0.5 ? random1 : items[Math.floor(Math.random() * items.length)];
 
-      // 逐步停止並直接顯示最終結果
+      // 逐步停止並顯示最終結果
       setTimeout(() => {
         slot1.classList.remove("spinning");
         slot1.classList.add("stopped");
