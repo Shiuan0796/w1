@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>歡迎來到甜點世界</title>
-  <link rel="stylesheet" href="css/simple.css"> <!-- 引入 CSS 檔案 -->
+  <link rel="stylesheet" href="css/simple.css">
   <style>
     .slot-machine {
       display: flex;
@@ -23,10 +22,24 @@
       background: #f8f8f8;
       margin: 10px;
       overflow: hidden;
+      position: relative;
     }
     .slot span {
-      display: block;
-      transition: transform 1s ease-in-out;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .spinning {
+      animation: spin 0.1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%, -150%); }
+      100% { transform: translate(-50%, 150%); }
+    }
+    .stopped {
+      animation: none;
+      transition: transform 0.3s ease-out;
     }
     .btn {
       padding: 10px 20px;
@@ -35,12 +48,15 @@
       background: #ff66b2;
       color: white;
       border: none;
+      border-radius: 5px;
+    }
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
     }
   </style>
 </head>
-
 <body>
-  <!-- Header Section -->
   <header>
     <nav>
       <a href="index.html">首頁</a>
@@ -51,7 +67,6 @@
     </nav>
   </header>
 
-  <!-- Slot Machine Section -->
   <h1 style="text-align: center;">🎰 甜點拉霸遊戲 🎰</h1>
   <div class="slot-machine">
     <div class="slot"><span id="slot1">🍩</span></div>
@@ -59,7 +74,7 @@
     <div class="slot"><span id="slot3">🍰</span></div>
   </div>
   <div style="text-align: center;">
-    <button class="btn" onclick="spin()">拉霸！</button>
+    <button class="btn" id="spinBtn" onclick="spin()">拉霸！</button>
     <h2 id="result"></h2>
   </div>
 
@@ -70,36 +85,56 @@
   <script>
     function spin() {
       const items = ["🍩", "🍪", "🍰", "🍫", "🍦", "🧁"];
-      let slot1 = document.getElementById("slot1");
-      let slot2 = document.getElementById("slot2");
-      let slot3 = document.getElementById("slot3");
-      let result = document.getElementById("result");
-      
-      let random1 = items[Math.floor(Math.random() * items.length)];
-      let random2 = items[Math.floor(Math.random() * items.length)];
-      let random3 = items[Math.floor(Math.random() * items.length)];
-      
-      slot1.style.transform = "translateY(-100%)";
-      slot2.style.transform = "translateY(-100%)";
-      slot3.style.transform = "translateY(-100%)";
-      
+      const slot1 = document.getElementById("slot1");
+      const slot2 = document.getElementById("slot2");
+      const slot3 = document.getElementById("slot3");
+      const result = document.getElementById("result");
+      const spinBtn = document.getElementById("spinBtn");
+
+      // 禁用按鈕
+      spinBtn.disabled = true;
+      result.textContent = "";
+
+      // 開始旋轉動畫
+      [slot1, slot2, slot3].forEach(slot => {
+        slot.classList.add("spinning");
+        slot.classList.remove("stopped");
+      });
+
+      // 隨機結果
+      const random1 = items[Math.floor(Math.random() * items.length)];
+      const random2 = items[Math.floor(Math.random() * items.length)];
+      const random3 = items[Math.floor(Math.random() * items.length)];
+
+      // 逐步停止並直接顯示最終結果
       setTimeout(() => {
+        slot1.classList.remove("spinning");
+        slot1.classList.add("stopped");
         slot1.textContent = random1;
+      }, 1000);
+
+      setTimeout(() => {
+        slot2.classList.remove("spinning");
+        slot2.classList.add("stopped");
         slot2.textContent = random2;
+      }, 1500);
+
+      setTimeout(() => {
+        slot3.classList.remove("spinning");
+        slot3.classList.add("stopped");
         slot3.textContent = random3;
-        
-        slot1.style.transform = "translateY(0)";
-        slot2.style.transform = "translateY(0)";
-        slot3.style.transform = "translateY(0)";
-        
+
+        // 檢查結果
         if (random1 === random2 && random2 === random3) {
           result.textContent = "🎉 恭喜中獎！🎉";
         } else {
           result.textContent = "再試一次！🍀";
         }
-      }, 1000);
+
+        // 啟用按鈕
+        spinBtn.disabled = false;
+      }, 2000);
     }
   </script>
 </body>
-
 </html>
